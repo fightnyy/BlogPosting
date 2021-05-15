@@ -152,3 +152,30 @@ public class User{
 
 * 어떤 interface의 구현체가 2개이상일 때 특정 구현체에 @Primary 를 붙여주면 해당 구현체가 우선순위를 가짐
 * 단, Qualifier가 더 우선순위가 높음
+
+
+
+#### @NoArgsConstructor
+
+* 파라미터가 없는 기본 생성자를 생성해줍니다.
+
+
+
+#### @AllArgsConstructor
+
+* 모든 필드 값을 파라미터로 받는 생성자를 만들어줍니다.
+
+
+
+#### @RequiredArgsConstructor
+
+* `final` 이나 `@NonNull` 인 필드 값을 파라미터로 받는 생성자를 만들어줍니다.
+* "생성자의 파라미터가 하나이면 @Autowired를 안써도 된다"라는 말은 @RequiredArgsConstructor를 사용할 때 입니다. AllArgsconstructor는 안됩니다!
+
+
+
+#### @Tranactional
+
+* transaction `begin`, `commit`을 자동으로 수행해줍니다.
+* 한 작업 내에 어떤 작업에서 예외가 발생하면 `rollback`(all or nothing) 처리를 자동으루 수행해줍니다. 
+* 사실 해당 어노테이션을 사용할 때 헷갈린 점이 많이 있습니다. 그 문제는 [여기][https://mommoo.tistory.com/92]서 잘 다뤄주고 있으니 해당 부분을 참고해주시면 될 거 같습니다. (참고로 update 쿼리는 레포에서 찾을때 발생합니다)
