@@ -179,3 +179,19 @@ public class User{
 * transaction `begin`, `commit`을 자동으로 수행해줍니다.
 * 한 작업 내에 어떤 작업에서 예외가 발생하면 `rollback`(all or nothing) 처리를 자동으루 수행해줍니다. 
 * 사실 해당 어노테이션을 사용할 때 헷갈린 점이 많이 있습니다. 그 문제는 [여기][https://mommoo.tistory.com/92]서 잘 다뤄주고 있으니 해당 부분을 참고해주시면 될 거 같습니다. (참고로 update 쿼리는 레포에서 찾을때 발생합니다)
+
+
+
+#### @EnableWebSecurity
+
+* SpringSecurityFilterChain이 자동으로 포함됨
+* 스프링시큐리티 사용을 위한 어노테이션
+
+
+
+#### @Value
+
+* 공통 값들을 정의해 놓은 파일에 접근하여 원하는 데이터를 읽어와 사용한다고 생각하면 됩니다.
+* @Value에서 사용할 값은 application.yml 파일에서 정의 할 수 있습니다.
+
+* 편하게 주입받을 수 있다는 장점이 있습니다.
