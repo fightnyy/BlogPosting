@@ -67,10 +67,18 @@ __Specificity__ : more subjective human quality
   * Crowd worker의 일관성을 측정하기 위해 agreement 와 Krippendorff's alpha 사용
   * 5명이 레이블링  하더라도 꽤 높은 일치율을 보임
 * SSA 와 Human likeness 의 그래프를 각 축으로 비교해보니 일정한 상관관계가 나오는 것을 확인할 수 있었음 
+* SSA 는 Human-metric임
 
 
 
+새로운 디코딩 방식인(Sample-and-rank) 방식을 제안함
 
+* Sample N independent candidate response(using plain random sampling with temperatrue T)
+* candidate response 중에서 highest probability를 갖는 걸 final output으로 선택
+
+
+
+- Temperature T는 hyper param이고 다음 토큰에 대한 확률뷴
 
 ### Types of Chatbot
 
