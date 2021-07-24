@@ -1,0 +1,75 @@
+# DPR (Dense Passage Retrieval for Open-Domain Question Answering)
+
+## TL;DR
+
+
+
+## 사전 지식
+
+* Open-domain QA : Open domain Chatbot 과 같이 특정 주제가 아닌 여러 주제에 대해서 QA가 오고 가는것을 얘기합니다. 따라서 정답을 추출할 수 있는 문서가 사전 제공되지 않기 때문에, 질문에 대한 답변이 될 수 있는 ("정답 스팬"을 포함하는) 문서를 웹 혹은 DB에서 뽑아오는 작업이 선행되어야 합니다. 이러한 Retrieve 과정에는 전통적으로 TF-IDF, BM25 등의 Term(단어)-based 기법들이 주로 활용되었습니다. 해당 기법을 통해 얻어지는 결과를 우리는 Sparse Vector 라고 합니다.
+* TF-IDF :
+* BM25 :
+* Sparse Vecotor 
+* Dense Vector
+* MRC : Machine  Reading Comprehension(기계 독해)
+* Inductive bias : 인적 편향이라고 말할 수 있습니다. 대표적인 예로 CNN 의 Architecture가 있습니다. CNN 의 경우 생물체가 어떻게 물체를 인식하는지를 보고 __한번에 물체를 파악하는것이 아닌 물체의 outline을 먼저 본다.__ 를 알아내고 이를 모델 Architecture로 만들어 냈습니다. 따라서 모델을 설계할 때 사람의 인식이  들어간것을 inductive bias 라고 합니다.
+
+## Method
+
+* Dense Vector를 활용하는 Retrieve를 수행하되, Answer Extraction을 수행하는 __Document Reader__와, 관련 문서를 뽑아오는 __Passage Retrieve__를 __별도로 훈련__하여 활용
+
+* REALM이 Retriever과 Reader를 End-to-end로 사전학습 시킴에 따라 발생하게 되는 오버헤드(MIPS 방식)를 줄이기 위한 연구 방향으로 DPR은 위 방법을 채택
+
+* Dense Retriever이 관련 문서를 잘 추출 할 수 있도록 훈련하기 위해선 Positive Sample 과 Negative Sample을 잘 활용한 학습이 수행되어야 합니다. 이러한 훈련 Scheme에서 항상 가장 중요한 것은 Negative Sample을 어떻게 잘 뽑아 낼 것인가 입니다. 
+
+* 이를 위해 DPR은 총 3가지 방법을 실험 했습니다. 
+
+  * Random : 데이터셋 내 임의의 문서를 Negative Sample로 설정
+  * BM25: "정답 스팬"은 포함하지 않지만, BM25에 의해 높은 순위로 매겨진 문서를 Negative Sample로 설정
+  * Gold : 다른 질문에 대한 답을 포함한 문서를 Negative Sample로 설정
+
+  이 방법들 중 미니 배치 내 다른 질문에 대한 Gold Passage 전체와 BM25가 반환한 하나의 Negative Sample을 포함하여 Retrieve를 학습하였을 때 가장 성능이 좋았습니다. 그리고 Gold Passage 들을 Negative Sample로 활용해 학습하기 위해 "in-batch negatives"라는 기법을 활용했는데 해당 기법은 아래 설명과 같습니다.
+
+* 질문이 N 개, 각 질문에 대한 답변을 포함하고 있는 문단이 N 개가 있다고 하면 두 행렬의 유사도 계산을 통해 N * N 의 유사도 매트릭스가 형성됩니다. 이 때 행을 i, 열을 j 라고 하면 i == j 인 부분은(질문, 정답 포함 문단)의 유사도 이므로 해당 값은 높여야 하는 값이 되고, i != j 부분은(질문, 정답 포함 X 문단)의 유사도 이므로 줄어야합니다.
+
+* 미니 매치 안에 특정 질문과 그에 대한 정답을 포함한 문단만 포함되어 있으면 다른 쌍을 활용해 배치 안에서 Negatvie Sample을 생성할 수 있다는 의미에서 in-batch negatives라는 이름으로 불립니다. 
+
+* 연산 면에서도 매우 효율적
+
+## Example
+
+* Q : "반지의 제왕에 등장하는 나쁜 놈은 누구야?"
+  * 해당 질문을 Sparse Vector로 해결하기는 쉽지 않습니다. 왜냐하면 "나쁜 놈" 이라는 어휘를 사용하면서, 사우론을 표현한 아티클은 많지 않을 것이기 때문입니다.
+  * 그러나 훈련이 잘된 Dense Vector는 "..."Sala Baker" 는 반지의 제왕 시리즈에서 사우론이라는 빌런을 연기한 것으로 잘 알려져 있다..." 라는 문장이 포함된 문서에서 "빌런" 이라는 단어를 "나쁜놈"이라는 표현과 시맨틱하게 유사하다고 판단 해 해당 아티클을 참고할 수 있는 문서로 제공할 것입니다. 
+  * 이와 반대로 Spase Vector는 겹치는 어휘의 양이 중요하게 활용되어야 하는 QA에 대해 좋은 문서를 내줄 수 있습니다.
+
+## Conclusion
+
+![성능.](https://scontent-gmp1-1.xx.fbcdn.net/v/t1.6435-9/105943686_276190487146156_5725518035682435319_n.png?_nc_cat=106&ccb=1-3&_nc_sid=730e14&_nc_ohc=tF7ntEVn4B8AX_6E-9F&_nc_ht=scontent-gmp1-1.xx&oh=8514e749bbed894d1f98585233b0d5d7&oe=612211CD)
+
+* Open-domain QA 벤치마크에서도 REALM과 유사하거나 REALM에 비해 성능이 좋았습니다
+* End-to-end로 학습되지 않은 DPR의 Reader 도 Retriever가 반환한 "질 좋은" 문서를 받아본다면 QA 성능을 높일 수 있다는 방증이 됩니다.
+* 따라서 DPR은 __Open-domain QA 에 있어 가장 중요한 모듈은 Dense Retriever__ 라는 잠정적 결론을 내릴 수 있습니다.
+
+
+
+
+
+
+
+# REALM
+
+## TL;DR
+
+* 모델의 파라미터에 지식을 저장하는 방법이 아닌, 별도의 모델이 어떤 지식을 retrieve 할지 결정하고,inference 시에 retrieve 된 지식을 사용하도록 하는 방법을 사용합니다. REALM의 핵심 아이디어는 retrieval된 결과가 language model의 PPL을 향상시키는데 도움을 준다면 보상(reward)를 주고, 또는 부정확한 정보 또는 의미없는 결과를 retrieve 했다면 처벌(penalize)를 시키는 방식으로 retrieval 모델을 학습하는 것입니다
+* Retrive 부터 Answer Extraction 까지의 모든 과정을 Pre-training을 통해 해결하고자 함
+
+
+
+## 사전지식
+
+* __Inverse
+
+* Unsuperivsed Inverse Close Task(ICT)를 통해 retriever를 pre-train 하면 end-to-end의 학습이 가능해진다. 
+* ICT에서 sentence는 pseudo-question으로 처리되고 context는 pseudo-evidence로 처리된다. ICT pre-training은 정답을 marginal log-likelihood로 최적화하여 retriever 모델을 end-to-end로 fine-tuning 할 수 있도록 초기화 할 수 있다. 
+
