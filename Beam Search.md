@@ -1,18 +1,16 @@
 # Beam Search
 
-
-
 ![image](https://user-images.githubusercontent.com/55227984/126916561-a3b754f6-d785-4e0f-bf45-984aa38988df.png)
 
-> Beam Search 는 탐욕 방법과 함께 가장 많이 사용되는 휴리스틱 방법이다. 각각의 타임 스텝에서 가능도가 가장 높은 하나의 토큰을 선택하는 __Greedy Search__ 와는 달리 __Beam Search__ 는 각 스텝에서 탐색의 영역을 K개의 가장 가능도가 높은 토큰들을 유지하며 다음 단계를 탐색하는 것을 의미한다. 이때 __K__ 는 사용자가 지정하는 hyper-parameter이다. 
+> Beam Search 는 탐욕 방법과 함께 가장 많이 사용되는 휴리스틱 방법이다. 각각의 타임 스텝에서 가능도가 가장 높은 하나의 토큰을 선택하는 __Greedy Search__ 와는 달리 __Beam Search__ 는 각 스텝에서 탐색의 영역을 K개의 가장 가능도가 높은 토큰들을 유지하며 다음 단계를 탐색하는 것을 의미한다. 이때 __K__ 는 사용자가 지정하는 hyper-parameter이다.
 
- # Beam Search Algorithm
+# Beam Search Algorithm
 
-> parameter K가 주어질 때 예측된 확률 분포의 시퀀스에 대해 beam search 를 진행하는 과정은 다음과 같다. 
+> parameter K가 주어질 때 예측된 확률 분포의 시퀀스에 대해 beam search 를 진행하는 과정은 다음과 같다.
 >
 > 1. 각 스텝에서 각각의 후보 시퀀스를 모두 가능한 다음 step으로 확장한다.
->
->    ex. 해당 스텝에서 <BOS> 라는 토큰이 나왔으면 그 다음 step은 뭐가 몇 %의 확률로 나오는지 체크하는 것을 의미한다.
+     >
+     >    ex. 해당 스텝에서 <BOS> 라는 토큰이 나왔으면 그 다음 step은 뭐가 몇 %의 확률로 나오는지 체크하는 것을 의미한다.
 >
 > 2. 확장된 후보 스텝에 대해 점수를 계산하는데. 점수는 모든 확률 값을 곱하여 얻는다.
 >

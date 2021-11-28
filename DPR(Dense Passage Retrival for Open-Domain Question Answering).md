@@ -1,7 +1,5 @@
 ## DPR(Dense Passage Retrival for Open-Domain Question Answering)
 
-
-
 #### Abstract
 
 * Open-Domain QA 는 엄청난 정보(위키피디아 )를 바탕으로 답을 찾아내는 Task
