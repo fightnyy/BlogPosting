@@ -44,4 +44,33 @@
        }
        ```
 
-     * 
+3. `StringUtils`
+
+   * 문자열등에서 여러가지를 체크해줌
+
+   * ```java
+     StringUtils.replace("문자열", "찾을문자", "변경문자", 변경횟수);
+     StringUtils.replace("문자열", "찾을문자", "변경문자");
+     ```
+
+
+
+4. 메서드 참조
+
+   * 특정 람다 표현식을 축약한 것
+
+   * 예를들어 `Apple::getWeight` 는 `Apple` 클래스에 정의된 `getWeight` 의 메소드 참조이다.
+
+   * 실제로 메소드는 호출한 것이 아니므로 괄호가 필요없다. 
+
+   * 결과적으로 메소드 참조는 람다 표현식 `(Apple a) -> a.getWeight() ` 를 축약한 것이다. 
+
+     | 람다                                     | 메서드 참조 단축 표현 |
+     | ---------------------------------------- | --------------------- |
+     | (Apple apple) -> apple.getWeight()       |                       |
+     | () -> Thread.currentThread().dumpStack() |                       |
+     | (str. i) -> str.substring(i)             |                       |
+     | (String s) -> System.out.println(s)      |                       |
+     |                                          |                       |
+
+     
