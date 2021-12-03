@@ -74,3 +74,87 @@
      |                                          |                       |
 
      
+
+5. `Collections.shuffle`
+
+   * java에서 collection 을 섞는 방법이다. 
+
+   * 사용방법 
+
+     ```java
+     List<String> stringList = Arrays.asList("Foo", "Bar", "Baz", "Qux");
+     Collections.shuffle(stringList);sl
+     ```
+
+     
+
+6. `List` 에 특정 값이 포함되어 있는지 확인하는 방법
+
+   * ```
+     1. contains()
+     2. indexOf()
+     3. Stream API
+     ```
+
+     1. `contains()`
+
+        ```java
+        public class ListValueCheck {
+          public static void main(String... args) {
+            List<String> list = new ArrayList<>(Arrays.asList("Hello", "Hi"));
+            
+            // 포함 여부 체크
+            // 여기서 포함여부는 해당 객체 내의 equals() 로 정의된다. 여기선 String 이니까 String의 equals로 재정의 되는 것
+            boolean isContainsHello = list.contains("Hello"); // true
+            boolean isContainsBye = list.contains("Bye"); // false
+            
+        
+          }
+        }
+        ```
+
+        
+
+     2. `indexOf()`
+
+        ```java
+        List 의 indexOf() 메소드는 같은 객체가 List 안에 있으면 해당 객체가 나타나는 첫번째 index 값을 리턴한다. 만약 List에 같은 값이 없으면 -1을 리턴한다. 이때도 contains() 메소드와 같이, 같은 객체를 찾을 때 equals() 메소드를 활용한다.
+          
+        public class ListValueCheck {
+          public static void main(String... args) {
+            List<String> list = new ArrayList<>(Arrays.asList("Hello", "Hi"));
+            
+            // 포함 여부 체크
+            // 여기서 포함여부는 해당 객체 내의 equals() 로 정의된다. 여기선 String 이니까 String의 equals로 재정의 되는 것
+            int isContainsHello = list.indexOf("Hello"); // 0
+            int isContainsBye = list.indexOf("Bye"); // -1
+          }
+        }
+        ```
+
+     3. `Stream API` 를 사용
+
+        ```java
+        import java.util.ArrayList;
+        import java.util.Arrays;
+        import java.util.List;
+        
+        public class ListValueCheck {
+          public static void main(String[] args) {
+            
+            List<String> list = new ArrayList<>(Arrays.asList("Hello", "Hi"));
+            // Hello 포함 여부 체크
+            
+            long count = list.stream().filter(str -> "Hello".equals(str)).count();
+            System.out.println("Count : " + count);
+            if (count > 0) {
+              System.out.println("Hello는 리스트에 포함된 문자열입니다.");
+            }
+          }
+        }
+        
+        ```
+
+         
+
+        
