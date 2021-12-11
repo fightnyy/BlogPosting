@@ -208,9 +208,58 @@ public void testJsonInclude() throws JsonProcessingException {
 #### @Tranactional
 
 * transaction `begin`, `commit`을 자동으로 수행해줍니다.
+
 * 한 작업 내에 어떤 작업에서 예외가 발생하면 `rollback`(all or nothing) 처리를 자동으루 수행해줍니다.
+
 * 사실 해당 어노테이션을 사용할 때 헷갈린 점이 많이 있습니다. 그 문제는 [여기][https://mommoo.tistory.com/92]서 잘 다뤄주고 있으니 해당 부분을 참고해주시면 될 거 같습니다. (참고로
   update 쿼리는 레포에서 찾을때 발생합니다)
+  
+* ```java
+  @Autowired
+  private PlatformTransactionManager transactionManager;
+  
+  @Autowired
+  private Buyer buyer
+  
+  @Autowired
+  private Seller seller;
+  
+  public void buy() {
+  
+    DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+    TransactionStatus status = transactionManager.getTransaction(def);
+  
+    try {
+        buyer.send();			
+        seller.receive();
+        
+        transactionManager.commit(status);
+  
+    } catch(Exception e) {
+  
+        transactionManager.rollback(status);
+  
+    } 
+  }
+  
+  // 같은 의미이다.
+  
+  @Autowired
+  private Buyer buyer
+  
+  @Autowired
+  private Seller seller;
+  
+  @Transactional
+  public void buy() {
+  
+    buyer.send();			
+    seller.receive();
+  
+  }
+  ```
+  
+  
 
 #### @EnableWebSecurity
 
@@ -545,7 +594,12 @@ public void testJsonInclude() throws JsonProcessingException {
   spring.io -> Projects -> Spring boot -> learn -> 나에게 맞는 버전의 Refence Doc -> Dependency Version 을 들어가면 된다.
   ```
 
+* ## 스프링의 코드를 삽입 방법은 크게 2가지 방법이 있다.
 
+  * 바이트코드 생성(CGLIB 사용)
+  * 프록시 객체 사용
+    * 2가지 방법중 Spring 은 기본적으로 프록시 객체 사용이 선택된다. 그렇기에 interface가 반드시 필요하다.
+    * 하지만 SpringBoot 는 기본적으로 바이트코드가 생성된다. 따라서 굳이 interface가 필요 없다.
 
 * ### `gradle` 통해 의존 관계 나오는 명령어
 
