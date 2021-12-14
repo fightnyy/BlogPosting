@@ -53,3 +53,16 @@
 
 
 
+## 랜덤 I/O와 순차 I/O
+
+* 일반적으로 랜덤 I/O가 순차 I/O 비해 더 느립니다.
+* 이는 HDD 이든 SSD든 변하지 않는 사실입니다.
+
+
+
+
+
+#### 참고
+
+* https://condusiv.com/sequential-io-always-outperforms-random-io-on-hard-disk-drives-or-ssds/
+

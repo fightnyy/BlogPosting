@@ -266,11 +266,32 @@ public void testJsonInclude() throws JsonProcessingException {
 * SpringSecurityFilterChain이 자동으로 포함됨
 * 스프링시큐리티 사용을 위한 어노테이션
 
-#### @Value
+#### @Value (org.springframework.beans.factory.annotation)
 
 * 공통 값들을 정의해 놓은 파일에 접근하여 원하는 데이터를 읽어와 사용한다고 생각하면 됩니다.
 * @Value에서 사용할 값은 application.yml 파일에서 정의 할 수 있습니다.
 * 편하게 주입받을 수 있다는 장점이 있습니다.
+* 이걸 lombok 의 value 인줄 알고 1시간동안 헤맸습니다 ㅠㅠ
+
+
+
+### @Value(lombok)
+
+* 클래스 레벨에 @Value 어노테이션 선언시 사용할 수 있다.
+
+* ```java
+  @Value
+  public class ValueExample {
+    String name;
+    String email;
+  }
+  ```
+
+* 이렇게 되면 기본적으로 필드가 `private` 와 `final` 이 붙은 상수가 된다.
+
+* `@Data` 어노테이션 처럼 `eqauls, hashCode, toString` 을 함께 만들어 준다.
+
+* 단 final이 붙은거처럼 setter는 만들어주지 않는다.
 
 ### @RequestBody
 
